@@ -3,6 +3,7 @@
         "twig/twig": "~1.0",
         "chrisboulton/php-resque": "1.2.x",
         "chrisboulton/php-resque-scheduler": "1.1",
-        "twilio/sdk": "^4.10" 
+        "twilio/sdk": "^4.10",
+        "klein/klein": "v2.0.2" 
     }
 }
