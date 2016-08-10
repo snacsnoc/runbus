@@ -1,79 +1,41 @@
 {% include 'head.twig' %}
    <body>
         <div class="container">
-
             <h1>runbus.xyz</h1>
-
             <div class="row">
-
-
-  <script type="text/javascript" >     
-
-window.onload = getLocation;      
-
-var geo = navigator.geolocation;     /*     Here we will check if the browser supports the Geolocation API; if exists, then we will display the location     */    
-
-function getLocation() {       
-    if( geo ) {    
-        geo.getCurrentPosition( displayLocation );       
-           } 
-           else  { alert( "Oops, Geolocation API is not supported");        
-           }     
-}         
-
-/*     This function displays the latitude and longitude when the browser has a location.     */   
-
-    function displayLocation( position ) {         
-        var latitude = position.coords.latitude;        
-        var longitude = position.coords.longitude;            
-        var div = document.getElementById( 'location' );     
-        //div.innerHTML = "You are at Latitude: " + latitude + ", Longitude: " + longitude;    
-        document.getElementById('lat').value = latitude;
-        document.getElementById('long').value = longitude;
-                                } 
-</script> 
                 <div class="col-md-6">
                     <form action="?" method="get">
                     <input name="lat" value="" id='lat' type="hidden">
                     <input name="long" value="" id='long' type="hidden">
-
-                    <button class="btn btn-success btn-lg">Find me!</button>
+                    <button class="btn btn-success btn-lg" disabled="disabled" id="find-me-button">Find me!</button>
                     </form>
-
-                    </div>
+                    </div> 
                 <div class="col-md-6">
-                    <p>Find bus by stop number
+                    <p>Find bus times by stop number
                     <form action="?" method="get">
                     <input name="stopno" value="{{ closest_stop }}">
-
                     <button class="btn btn-primary">Find</button>
                     </form>
                     </p>
-
                 </div>
-
                 <div class="col-md-6">
                     <p>Find bus by address
-                    <form action="?" method="get">
+                    <form action="?" method="get" >
                     <input name="address" value="">
-
                     <button class="btn btn-primary">Find</button>
                     </form>
                     </p>
-
-
                     {% if next_estimate is not null %} 
-
                     <p>Route: {{ route_no }} to {{ next_estimate.0.Destination }} 
                     <br>
-                    The bus is {{ bus_schedule_time }} </p>
-                    
+                    {% if bus_schedule_time is not null %} 
+                    Real Time: The bus is {{ bus_schedule_time }} </p>
+                    {% endif %}
                     <p>Next estimate: {{ next_estimate.0.ExpectedLeaveTime }} in <b>{{ next_estimate.0.ExpectedCountdown }}</b> minutes.</p>
                     <p>Next next estimate: {{ next_estimate.1.ExpectedLeaveTime }} in <b>{{ next_estimate.1.ExpectedCountdown }}</b> minutes.</p>
                     <br>
-                    <form>
-                    Send SMS 
-                    <form action="?" method="get">
+                    <form action="response.php" class="js-ajax-php-json" method="post" accept-charset="utf-8">
+                    Send SMS to <input name="phonenumber" placeholder="6045551234" value="{{ dest_phone_number }}"> at
                         <select name="minute">
                             <option value="1">1</option>
                             <option value="5">5</option>
@@ -89,24 +51,24 @@ function getLocation() {
                             <option value="{{ next_estimate.1.ExpectedCountdown }}">{{ next_estimate.1.ExpectedLeaveTime }}</option>
                         </select> bus departure time
                         <input name="route_no" type="hidden" value="{{ route_no }}">
-                        <button class="btn btn-info">Remind me!</button>
+                        <button class="btn btn-info" id="submit" >Remind me!</button>
+                        <input type="hidden" name="action" value="schedule"  />
                     </form> 
-                    
+                 <div class="notice-bar" role="alert"></div>
+                 {% if notice is not null %} 
+                {% endif %}   
                     {% endif %}
                     {% if closest_stop is not null %} 
-
+                    <hr>
                     Closest bus stop #: {{ closest_stop }} at {{ stop_location }}. 
                     {% endif %}
-                </div>
+                </div>   
                 <hr>
                 <div class="col-md-6">
-                    <p>Send a text message to 604-239-5120 with the stop # to receive info
-                    </p>
-
+                <p>Send a text message to <a href="sms:604-239-5120?body=my favourite bus stop">604-239-5120</a> with the stop # to receive info</p> 
                 </div>
-
             </div>
-
         </div>
     </body>
+    {% include 'footer.twig' %}
 </html>

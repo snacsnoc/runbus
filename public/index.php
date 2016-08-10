@@ -3,8 +3,6 @@
 
 #ini_set('display_errors',1);
 
-$config['apikey'] = '4Q27nB1G2aGGzOheGNeg';
-
 require '../vendor/autoload.php';
 require '../Sms_job.php';
 require_once '../settings.php';
@@ -31,7 +29,8 @@ $context = stream_context_create($opts);
 
 
 //Use html5 geolocation to get the user's location
-if(isset($_GET['lat']) && isset($_GET['long'])){
+if(!empty($_GET['lat']) && !empty($_GET['long'])){
+
 
   //API only likes 6 numbers after decimal
   $geo['lat'] = substr($_GET['lat'], 0, 9);
@@ -41,7 +40,7 @@ if(isset($_GET['lat']) && isset($_GET['long'])){
   $stops   = file_get_contents('http://api.translink.ca/rttiapi/v1/stops?apikey='.$config['apikey'].'&lat='.$geo['lat'].'&long='.$geo['long'].'&radius=200', false, $context);
   $stops_output      = json_decode($stops);
   if(empty($stops_output)){
-    echo 'no stops by geo';
+    echo 'no stops near you, sorry!';
   }
 
   $bus_time   = file_get_contents('http://api.translink.ca/rttiapi/v1/stops/'.$stops_output[0]->StopNo.'/estimates?apikey='.$config['apikey'].'&count=2&timeframe=65', false, $context);
@@ -65,24 +64,6 @@ switch($bus_time_output[0]->Schedules[0]->ScheduleStatus){
 
 
 
-}
-if(isset($_GET['countdown'])){
-  $minute = $_GET['minute'];
-  $countdown = $_GET['countdown'];
-  $route_no = $_GET['route_no'];
-  $remind_time = $countdown - $minute;
-
-
-
-$args = array(
-        'leave_time' => $remind_time,
-        'departure' => $minute,
-        'route_no' => $route_no
-        );
-
-$seconds = $remind_time * 60;
-ResqueScheduler::enqueueIn($seconds, 'test', 'Sms_job', $args);
-echo "Sending in ".$remind_time." minutes";
 }
 
 if(isset($_GET['address'])){
@@ -154,7 +135,6 @@ echo $twig->render('index.twig', array('closest_stop' => $stops_output[0]->StopN
     'stop_location' => $stops_output[0]->Name,
     'route_no' => $bus_time_output[0]->RouteNo,
     'next_estimate' => $bus_time_output[0]->Schedules,
-    'bus_schedule_time' => $bus_schedule));
-
-
-require 'compass.php';
+    'bus_schedule_time' => $bus_schedule,
+    'dest_phone_number' => $_COOKIE['dest_phone_number'],
+    'notice' => $notice));

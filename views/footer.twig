@@ -1,31 +1,57 @@
-<footer>
-    <p><a href="https://github.com/snacsnoc/pasteros">pasteros on github</a>
-</footer> 
-
-<script src="https://code.jquery.com/jquery-2.1.0.min.js"></script>
-<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
-<script type="text/javascript" src="/js/main.js"></script>
-<script type="text/javascript" src="/js/bootstrap.min.js"></script>
-<script src="/js/syntaxhighlighter/shCore.js" type="text/javascript"></script>
-<script src="/js/syntaxhighlighter/shAutoloader.js" type="text/javascript"></script>
- 
+<script src="/js/jquery-1.11.0.min.js"></script>
 <script type="text/javascript">
-SyntaxHighlighter.autoloader(
-  'javascript               /js/syntaxhighlighter/shBrushJScript.js',
-  'bash                     /js/syntaxhighlighter/shBrushBash.js',
-  'cpp                      /js/syntaxhighlighter/shBrushCpp.js',
-  'csharp c#                /js/syntaxhighlighter/shBrushCSharp.js',
-  'css                      /js/syntaxhighlighter/shBrushCss.js',
-  'diff                     /js/syntaxhighlighter/shBrushDiff.js',
-  'java                     /js/syntaxhighlighter/shBrushJava.js',
-  'perl                     /js/syntaxhighlighter/shBrushPerl.js',
-  'php                      /js/syntaxhighlighter/shBrushPhp.js',
-  'plain                    /js/syntaxhighlighter/shBrushPlain.js',
-  'python                   /js/syntaxhighlighter/shBrushPython.js',
-  'ruby                     /js/syntaxhighlighter/shBrushRuby.js',
-  'sql                      /js/syntaxhighlighter/shBrushSql.js',
-  'xml                      /js/syntaxhighlighter/shBrushXml.js'
+$("document").ready(function(){
+$(".js-ajax-php-json").submit(function(){
+var data = {
+"action": "schedule"
+};
+data = $(this).serialize() + "&" + $.param(data);
+$.ajax({
+type: "POST",
+dataType: "json",
+url: "response.php", 
+data: data,
+success: function(data) {
+$(".notice-bar").html(
+data["response"]
 );
- 
-SyntaxHighlighter.all();
+}
+});
+return false;
+});
+});
 </script>
+<script type="text/javascript" >     
+
+window.onload = getLocation;      
+
+var geo = navigator.geolocation;    
+
+function getLocation() {      
+
+    if( geo ) {    
+        geo.getCurrentPosition( displayLocation );       
+           } else  { 
+           	alert( "Oops, Geolocation API is not supported");
+    
+           }     
+}         
+
+/*     This function displays the latitude and longitude when the browser has a location.     */   
+
+    function displayLocation( position ) {         
+        var latitude = position.coords.latitude;        
+        var longitude = position.coords.longitude;            
+        var div = document.getElementById( 'location' );     
+        //div.innerHTML = "You are at Latitude: " + latitude + ", Longitude: " + longitude;    
+        document.getElementById('lat').value = latitude;
+        document.getElementById('long').value = longitude;
+        if (latitude){
+            $('#find-me-button').removeAttr('disabled'); // updated according to http://stackoverflow.com/questions/7637790/how-to-remove-disabled-attribute-with-jquery-ie
+           
+        } else {
+             $('#find-me-button').attr('disabled', 'disabled'); // updated according to http://stackoverflow.com/questions/7637790/how-to-remove-disabled-attribute-with-jquery-ie
+        }
+}
+</script> 
+<a href="https://github.com/snacsnoc/runbus">Github</a>

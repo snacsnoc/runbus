@@ -9,7 +9,7 @@ class Sms_job
 
 			$message = $client->account->messages->create(array(
     			"From" => "+16042395120", // From a valid Twilio number
-    			"To" => "+1XXXXXXXXXX",   // Text this number
+    			"To" => "+1".$this->args['phone_number'],   // Text this number
     			"Body" => "Leave soon. Bus ".$this->args['route_no']." departs in ".$this->args['departure'],
 			));
 
