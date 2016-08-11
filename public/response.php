@@ -32,8 +32,6 @@ $seconds = $remind_time * 60;
 ResqueScheduler::enqueueIn($seconds, 'test', 'Sms_job', $args);
 
 $notice = "Sending in ".$remind_time." minutes!";
-
-
 $return = array('success' => 1, 'response' => $notice);
 
 echo json_encode($return);

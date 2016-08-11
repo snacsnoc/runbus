@@ -34,7 +34,7 @@
                     <p>Next estimate: {{ next_estimate.0.ExpectedLeaveTime }} in <b>{{ next_estimate.0.ExpectedCountdown }}</b> minutes.</p>
                     <p>Next next estimate: {{ next_estimate.1.ExpectedLeaveTime }} in <b>{{ next_estimate.1.ExpectedCountdown }}</b> minutes.</p>
                     <br>
-                    <form action="response.php" class="js-ajax-php-json" method="post" accept-charset="utf-8">
+                    <form class="js-ajax-php-json" method="post" accept-charset="utf-8">
                     Send SMS to <input name="phonenumber" placeholder="6045551234" value="{{ dest_phone_number }}"> at
                         <select name="minute">
                             <option value="1">1</option>
@@ -54,7 +54,7 @@
                         <button class="btn btn-info" id="submit" >Remind me!</button>
                         <input type="hidden" name="action" value="schedule"  />
                     </form> 
-                 <div class="notice-bar" role="alert"></div>
+                 <div id="notice-bar" role="alert" class="alert alert-success fade-in" style="display:none"></div>
                  {% if notice is not null %} 
                 {% endif %}   
                     {% endif %}

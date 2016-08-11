@@ -1,57 +1,71 @@
-<script src="/js/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="/js/jquery-3.1.0.min.js"></script>
 <script type="text/javascript">
-$("document").ready(function(){
-$(".js-ajax-php-json").submit(function(){
-var data = {
-"action": "schedule"
-};
-data = $(this).serialize() + "&" + $.param(data);
-$.ajax({
-type: "POST",
-dataType: "json",
-url: "response.php", 
-data: data,
-success: function(data) {
-$(".notice-bar").html(
-data["response"]
-);
-}
-});
-return false;
-});
-});
-</script>
-<script type="text/javascript" >     
+    $(document).ready(function() {
+        $(".js-ajax-php-json").submit(function() {
+            var data = {
+                "action": "schedule"
+            };
+            data = $(this).serialize() + "&" + $.param(data);
+            $("#notice-bar").fadeTo(2000, 500).slideUp(500, function(){
+                $("#notice-bar").slideUp(500);
+            });
+            $("#notice-bar").html("Working.....");
+            $.ajax({
+                    type: "POST",
+                    url: "response.php",
+                    cache: false,
+                    data: data,
+                })
+                .done(function(response) {
+                    var parsed_data = JSON.parse(response);
 
-window.onload = getLocation;      
+                    $("#notice-bar").html(parsed_data.response);
 
-var geo = navigator.geolocation;    
+                    /*
+                    console.log(parsed_data);
+                    */
+                })
+                .fail(function(xhr, status, errorThrown) {
+                    /*
+                    console.log( "Error: " + errorThrown );
+                    console.log( "Status: " + status );
+                    console.dir( xhr );
+                    */
+                })
+                //Add this to prevent redirection after
+                return false; 
+        });
 
-function getLocation() {      
+    });
 
-    if( geo ) {    
-        geo.getCurrentPosition( displayLocation );       
-           } else  { 
-           	alert( "Oops, Geolocation API is not supported");
-    
-           }     
-}         
 
-/*     This function displays the latitude and longitude when the browser has a location.     */   
+    window.onload = getLocation;
 
-    function displayLocation( position ) {         
-        var latitude = position.coords.latitude;        
-        var longitude = position.coords.longitude;            
-        var div = document.getElementById( 'location' );     
+    var geo = navigator.geolocation;
+
+    function getLocation() {
+
+        if (geo) {
+            geo.getCurrentPosition(displayLocation);
+        } else {
+            alert("Oops, Geolocation API is not supported");
+        }
+    }
+
+    /*     This function displays the latitude and longitude when the browser has a location.     */
+
+    function displayLocation(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        var div = document.getElementById('location');
         //div.innerHTML = "You are at Latitude: " + latitude + ", Longitude: " + longitude;    
         document.getElementById('lat').value = latitude;
         document.getElementById('long').value = longitude;
-        if (latitude){
-            $('#find-me-button').removeAttr('disabled'); // updated according to http://stackoverflow.com/questions/7637790/how-to-remove-disabled-attribute-with-jquery-ie
-           
+        if (latitude) {
+            $('#find-me-button').removeAttr('disabled');
         } else {
-             $('#find-me-button').attr('disabled', 'disabled'); // updated according to http://stackoverflow.com/questions/7637790/how-to-remove-disabled-attribute-with-jquery-ie
+            $('#find-me-button').attr('disabled', 'disabled');
         }
-}
-</script> 
+    }
+</script>
 <a href="https://github.com/snacsnoc/runbus">Github</a>
