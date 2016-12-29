@@ -13,7 +13,7 @@
                 <div class="col-md-6">
                     <p>Find bus times by stop number
                     <form action="?" method="get">
-                    <input name="stopno" value="{{ closest_stop }}">
+                    <input name="stopno" value="{{ closest_stop }}" type="number">
                     <button class="btn btn-primary">Find</button>
                     </form>
                     </p>
@@ -58,6 +58,10 @@
                  {% if notice is not null %} 
                 {% endif %}   
                     {% endif %}
+                    
+                 {% if notice is not null %} 
+                 {{ notice }}
+                {% endif %} 
                     {% if closest_stop is not null %} 
                     <hr>
                     Closest bus stop #: {{ closest_stop }} at {{ stop_location }}. 
@@ -68,6 +72,11 @@
                 <p>Send a text message to <a href="sms:604-239-5120?body=my favourite bus stop">604-239-5120</a> with the stop # to receive info</p> 
                 </div>
             </div>
+        </div>
+        <div class="col-md-1">
+        <p>
+        <a href="https://github.com/snacsnoc/runbus">Github</a> | <a href="http://geekness.eu/contact">Contact</a>
+        </p>
         </div>
     </body>
     {% include 'footer.twig' %}
