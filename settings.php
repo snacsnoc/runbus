@@ -16,7 +16,9 @@ foreach ($settings as $key => $value) {
 $config = array(
 	'apikey' => '#',
 	'twilio_accountsid' => '#',
-	'twilio_authtoken' => '#');
+	'twilio_authtoken' => '#',
+            'cache_views' => FALSE,
+            'debug_mode' == FALSE);
 
 $compass_card_number = '#';
 $compass_card_cvn = '#';
