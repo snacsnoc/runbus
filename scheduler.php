@@ -1,5 +1,5 @@
 <?php
-//run with VERBOSE=1 php5 scheduler.php
+//run with VERBOSE=1 php7 scheduler.php
 
 require_once './settings.php';
 require './vendor/autoload.php';
