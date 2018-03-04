@@ -10,26 +10,42 @@
                     <button class="btn btn-success btn-lg" disabled="disabled" id="find-me-button">Find me!</button>
                     </form>
                     </div> 
-                <div class="col-md-6">
-                    <p>Find bus times by stop number
-                    <form action="?" method="get">
-                    <input name="stopno" value="{{ closest_stop }}" type="number">
-                    <button class="btn btn-primary">Find</button>
-                    </form>
-                    </p>
+                    {% if stop_number is not null %}
+                <div class="header"><button type="button" class="btn btn-primary"><span>Collapse</span></button>
+                    
                 </div>
-                <div class="col-md-6">
-                    <p>Find bus by address
-                    <form action="?" method="get" >
-                    <input name="address" value="">
-                    <button class="btn btn-primary">Find</button>
-                    </form>
-                    </p>
+                {% endif %}
+                <div class="search">
+                    <div class="col-md-6">
+                        <p>Find bus times by stop number
+                        <form action="?" method="get">
+                        <input name="stopno" value="{{ closest_stop }}" type="number">
+                        <button class="btn btn-primary">Find</button>
+                        </form>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p>Find bus by address
+                        <form action="?" method="get" >
+                        <input name="address" value="">
+                        <button class="btn btn-primary">Find</button>
+                        </form>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-md-6">   
                     {% if next_estimate is not null %} 
+
+                    {% if bus_time_output|length > 1 %}
+                        {% for item in bus_time_output %}
+                          <a href="/?stopno={{ closest_stop }}&routeno={{ item.RouteNo }}"><span class="badge">{{ item.RouteNo }}</span></a>
+                        {% endfor %}
+                    {% endif %}
                     <p>Route: {{ route_no }} to {{ next_estimate.0.Destination }} 
                     <br>
                     {% if bus_schedule_time is not null %} 
-                    Real Time: The bus is {{ bus_schedule_time }} </p>
+                        Real Time: The bus is {{ bus_schedule_time }} </p>
                     {% endif %}
                     <p>Next estimate: {{ next_estimate.0.ExpectedLeaveTime }} in <b>{{ next_estimate.0.ExpectedCountdown }}</b> minutes.</p>
                     <p>Next next estimate: {{ next_estimate.1.ExpectedLeaveTime }} in <b>{{ next_estimate.1.ExpectedCountdown }}</b> minutes.</p>
@@ -51,10 +67,14 @@
                             <option value="{{ next_estimate.1.ExpectedCountdown }}">{{ next_estimate.1.ExpectedLeaveTime }}</option>
                         </select> bus departure time
                         <input name="route_no" type="hidden" value="{{ route_no }}">
+                        <br />
                         <button class="btn btn-info" id="submit" >Remind me!</button>
                         <input type="hidden" name="action" value="schedule"  />
                     </form> 
-                 <div id="notice-bar" role="alert" class="alert alert-success fade-in" style="display:none"></div>
+                 <div id="notice-bar-info"          role="alert" class="alert alert-info fade-in" style="display:none"></div>
+                 <div id="notice-bar-fail"          role="alert" class="alert alert-danger fade-in" style="display:none"></div>
+                 <div id="notice-bar-success" role="alert" class="alert alert-success fade-in" style="display:none"></div>
+
                  {% if notice is not null %} 
                 {% endif %}   
                     {% endif %}
