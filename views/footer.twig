@@ -6,10 +6,13 @@
                 "action": "schedule"
             };
             data = $(this).serialize() + "&" + $.param(data);
-            $("#notice-bar").fadeTo(2000, 500).slideUp(500, function(){
-                $("#notice-bar").slideUp(500);
+
+            $("#notice-bar-info").fadeTo(2000, 600).slideUp(600, function(){
+                $("#notice-bar-info").slideUp(600);
             });
-            $("#notice-bar").html("Working.....");
+
+            $("#notice-bar-info").html("Working.....");
+
             $.ajax({
                     type: "POST",
                     url: "response.php",
@@ -19,15 +22,29 @@
                 .done(function(response) {
                     var parsed_data = JSON.parse(response);
                     if(parsed_data.success){
-                        $("#notice-bar").html(parsed_data.response);
+
+                        $("#notice-bar-success").fadeTo(2500, 800).slideUp(800, function(){
+                            $("#notice-bar-success").slideUp(800);
+                        });
+
+                        $("#notice-bar-success").html(parsed_data.response);
+
                     }else{
-                    //    console.log("Error");
+
+                        $("#notice-bar-fail").fadeTo(2500, 800).slideUp(800, function(){
+                            $("#notice-bar-fail").slideUp(800);
+                        });                
+
+                        $("#notice-bar-fail").html(parsed_data.response);
+
+                        console.log("Error in response");
                     }
                     /*
                     console.log(parsed_data);
                     */
                 })
                 .fail(function(xhr, status, errorThrown) {
+                    $("#notice-bar-fail").html("General failure " + errorThrown);
                     /*
                     console.log( "Error: " + errorThrown );
                     console.log( "Status: " + status );
@@ -36,6 +53,7 @@
                 })
                 //Add this to prevent redirection after
                 return false; 
+
         });
 
     });
@@ -65,7 +83,7 @@
         if (geo) {
             geo.getCurrentPosition(displayLocation);
         } else {
-            alert("Oops, Geolocation API is not supported");
+            alert("Oops, Geolocation API is not supported! Update your browser!");
         }
     }
 
@@ -86,6 +104,25 @@
     }
 
 
+
+$(".header").click(function () {
+
+    $header = $(this);
+    //getting the next element
+    $content = $header.next();
+    //open up the content needed - toggle the slide- if visible, slide up, if not slidedown.
+    $content.slideToggle(500, function () {
+        //execute this after slideToggle is done
+        //change text of header based on visibility of content div
+        $header.text(function () {
+            //change text based on condition
+            return $content.is(":visible") ? "Collapse" : "Expand";
+
+
+        });
+    });
+
+});
 
 
 
